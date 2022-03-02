@@ -20,14 +20,14 @@ public class MovieCollection
   {
     return movies;
   }
-  
+
   public void menu()
   {
     String menuOption = "";
-    
+
     System.out.println("Welcome to the movie collection!");
     System.out.println("Total: " + movies.size() + " movies");
-    
+
     while (!menuOption.equals("q"))
     {
       System.out.println("------------ Main Menu ----------");
@@ -40,14 +40,14 @@ public class MovieCollection
       System.out.println("- (q)uit");
       System.out.print("Enter choice: ");
       menuOption = scanner.nextLine();
-      
+
       if (!menuOption.equals("q"))
       {
         processOption(menuOption);
       }
     }
   }
-  
+
   private void processOption(String option)
   {
     if (option.equals("t"))
@@ -126,7 +126,7 @@ public class MovieCollection
       listToSort.set(possibleIndex, temp);
     }
   }
-  
+
   private void displayMovieInfo(Movie movie)
   {
     System.out.println();
@@ -140,7 +140,7 @@ public class MovieCollection
     System.out.println("User rating: " + movie.getUserRating());
     System.out.println("Box office revenue: " + movie.getRevenue());
   }
-  
+
   private void searchCast()
   {
     ArrayList<String> casts = new ArrayList<>();
@@ -217,7 +217,7 @@ public class MovieCollection
       askMovie(results);
     }
   }
-  
+
   private void listGenres()
   {
     ArrayList<String> genres = new ArrayList<>();
@@ -259,24 +259,13 @@ public class MovieCollection
     askMovie(genreMovies);
 
   }
-  
+
   private void listHighestRated()
   {
     ArrayList<Movie> tempArray = new ArrayList<>(movies);
 
-    for (int j = 1; j < tempArray.size(); j++)
-    {
-      Movie temp = tempArray.get(j);
-      double tempRating = temp.getUserRating();
-
-      int possibleIndex = j;
-      while (possibleIndex > 0 && tempRating < tempArray.get(j-1).getUserRating())
-      {
-        tempArray.set(possibleIndex, tempArray.get(possibleIndex - 1));
-        possibleIndex--;
-      }
-      tempArray.set(possibleIndex, temp);
-    }
+    tempArray.sort((o1, o2)
+            -> Double.compare(o2.getUserRating(), o1.getUserRating()));
 
     ArrayList<Movie> highestRatedArray = new ArrayList<>();
 
@@ -292,7 +281,7 @@ public class MovieCollection
 
       int choiceNum = i + 1;
 
-      System.out.println("" + choiceNum + ". " + title + " " + userRating);
+      System.out.println("" + choiceNum + ". " + title + ": " + userRating);
     }
 
     System.out.println("Which movie would you like to learn more about?");
@@ -308,10 +297,43 @@ public class MovieCollection
     System.out.println("\n ** Press Enter to Return to Main Menu **");
     scanner.nextLine();
   }
-  
+
   private void listHighestRevenue()
   {
-    /* TASK 6: IMPLEMENT ME! */
+    ArrayList<Movie> tempArray = new ArrayList<>(movies);
+
+    tempArray.sort((o1, o2)
+            -> Double.compare(o2.getRevenue(), o1.getRevenue()));
+
+    ArrayList<Movie> highestRevenueArray = new ArrayList<>();
+
+    for(int i = 0; i < 50; i++)
+    {
+      highestRevenueArray.add(tempArray.get(i));
+    }
+
+    for (int i = 0; i < highestRevenueArray.size(); i++)
+    {
+      String title = highestRevenueArray.get(i).getTitle();
+      double revenue = highestRevenueArray.get(i).getRevenue();
+
+      int choiceNum = i + 1;
+
+      System.out.println("" + choiceNum + ". " + title + ": " + revenue);
+    }
+
+    System.out.println("Which movie would you like to learn more about?");
+    System.out.print("Enter number: ");
+
+    int choice = scanner.nextInt();
+    scanner.nextLine();
+
+    Movie selectedMovie = highestRevenueArray.get(choice - 1);
+
+    displayMovieInfo(selectedMovie);
+
+    System.out.println("\n ** Press Enter to Return to Main Menu **");
+    scanner.nextLine();
   }
 
   private void importMovieList(String fileName)
@@ -359,7 +381,7 @@ public class MovieCollection
       }
     }
   }
-  
+
   // ADD ANY ADDITIONAL PRIVATE HELPER METHODS you deem necessary
   private void askMovie(ArrayList<Movie> moviesToPrint)
   {
@@ -385,5 +407,4 @@ public class MovieCollection
     System.out.println("\n ** Press Enter to Return to Main Menu **");
     scanner.nextLine();
   }
-
 }
